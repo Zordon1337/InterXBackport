@@ -398,8 +398,7 @@ public:
 	short                   physicsbone;
 	unsigned short  worldSurfaceIndex;
 	IClientEntity*               m_pEnt;
-	int                             hitbox;
-	char shit[0x24];
+	int hitbox;
 };
 
 inline bool CGameTrace::DidHit() const

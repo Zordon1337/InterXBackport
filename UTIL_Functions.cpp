@@ -2,22 +2,29 @@
 #include "Utilities.h"
 
 #include "RenderManager.h"
+#include <iostream>
 
 void UTIL_TraceLine(const Vector& vecAbsStart, const Vector& vecAbsEnd, unsigned int mask,
-	const IClientEntity *ignore, int collisionGroup, trace_t *ptr)
+	const IClientEntity* ignore, int collisionGroup, trace_t* ptr)
 {
-	typedef int(__fastcall* UTIL_TraceLine_t)(const Vector&, const Vector&, unsigned int, const IClientEntity*, int, trace_t*);
-	static UTIL_TraceLine_t TraceLine = (UTIL_TraceLine_t)Utilities::Memory::FindPattern(
-		"client.dll",
-		(PBYTE)"\x55\x8B\xEC\x83\xE4\x00\x83\xEC\x00\x56\x52\x51\x8D\x4C\x24\x00\xC7\x44\x24\x00\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x8B\x0D\x00\x00\x00\x00\x8D\x54\x24\x00\x8B\x45",
-		"xxxxx?xx?xxx?xxx????x????xx????xxx?xx"
-	);
-	//TraceLine(vecAbsStart, vecAbsEnd, mask, ignore, collisionGroup, ptr);
+	if (!ignore || !ptr)
+		return; // or handle error
+
+	Ray_t ray;
+	ray.Init(vecAbsStart, vecAbsEnd);
+
+	CTraceFilter simple;
+	simple.pSkip = &ignore;
+
+
+	Interfaces::Trace->TraceRay(ray, mask, (CTraceFilter*)&simple, ptr);
+
 }
+
 
 void UTIL_ClipTraceToPlayers(const Vector& vecAbsStart, const Vector& vecAbsEnd, unsigned int mask, ITraceFilter* filter, trace_t* tr)
 {
-	static DWORD dwAddress = Utilities::Memory::FindPattern("client.dll", (BYTE*)"\x53\x8B\xDC\x83\xEC\x00\x83\xE4\x00\x83\xC4\x00\x55\x8B\x6B\x00\x89\x6C\x24\x00\x8B\xEC\x81\xEC\x00\x00\x00\x00\x8B\x43\x00", "xxxxx?xx?xx?xxx?xxx?xxxx????xx?");
+	static DWORD dwAddress = Utilities::Memory::FindPatternV2("client.dll", "53 8B DC 83 EC 08 83 E4 F0 83 C4 04 55 8B 6B 04 89 6C 24 04 8B EC 81 EC ?? ?? ?? ?? 8B 43 10");
 
 	if (!dwAddress)
 		return;
