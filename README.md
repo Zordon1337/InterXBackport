@@ -8,9 +8,8 @@
 <p>Known issues</p>
 
 ```
-UTIL_* needs new patterns
+UTIL_* needs new patterns -> i think partially fixed
 legitbot doesnt work.
-awall crashes(UTIL_* broken).
 clantags crashes(wrong offset).
 Glow was removed to stop from crashing.
 ragebot is mostly broken.
@@ -18,6 +17,7 @@ esp on other entites than player might not work(wrong entity id's, but i think i
 Ragebot AA Yaw is commented out from source code(not by me)
 thirdperson
 and more probably that i didint check
+Ragebot cannot hit non moving target
 ```
 
 <p>Features that work</p>
